@@ -4,7 +4,7 @@ var MongoClient = require('mongodb').MongoClient;
 function addObject(collection, object) {
   collection.insert(object, function(err, result) {
     if (!err) {
-      console.log("Inserted : ");
+      console.log("I have inserted this into the collection : ");
       console.log(result);
     }
   });
@@ -12,22 +12,31 @@ function addObject(collection, object) {
 
 //Connect to Mongo
 MongoClient.connect("mongodb://localhost/", function(err, db) {
+
   //Connecting as Admin
   var adminDB = db.admin();
+
+  //Listing the databases before i do anything
   adminDB.listDatabases(function(err, databases) {
     console.log(" ");
     console.log("This is the original list of database before i have done anything");
     console.log(databases);
     console.log(" ");
   });
+
+
   //Creating a Database, in this case called NewDB
   var newDB = db.db("newDB");
+
+
   //Listing Collection Names that are in the Database, at the moment it should be nothing as it has just been created
   newDB.collectionNames(function(err, collectionNames) {
     console.log("This List the collections in the database - should be empty");
     console.log(collectionNames);
     console.log(" ");
-    //Creating a Collection, in this case collection
+
+
+    //Creating a Collection, in this case i have names it collection and i have added three objects to it which use the function at the top of the page.
     newDB.createCollection("colleciton", function(err, collection) {
       if (!err) {
         //If theres no Erroes add this to the collection called collection
@@ -50,29 +59,40 @@ MongoClient.connect("mongodb://localhost/", function(err, db) {
           location: "Taurus"
         });
         console.log("New Database and Collection Created");
-        //Listing the Databases
+
+
+        //Listing the Databases to how that I have added the database.
         adminDB.listDatabases(function(err, databases) {
           console.log(" ");
           console.log("I have now added a database called newDB");
           console.log(databases);
           console.log(" ");
+
+
           //Listing the Collection Names within the Database
           newDB.collectionNames(function(err, collectionNames) {
             console.log("These are the collections in the database newDB: There should be one called 'collection'");
             console.log(collectionNames);
             console.log(" ");
+
+          //I am now searching for any object in the collection named collection with a type of: planetary.
             collection.findOne({
               type: 'planetary'
             }, function(err, item) {
               console.log("Here I am searching for something witha  type: planetary");
               console.log(item);
               console.log(" ");
+
+            // I am now searching for everything in the collection names collection
               collection.find(function(err, items) {
                 items.toArray(function(err, itemArr) {
                   console.log("These are all my documents in the collection called collection");
                   console.log(itemArr);
                   console.log(" ");
-                  //Updating the collection with any objects that have planetary to Planetay.
+
+
+
+            //Updating the collection with any objects that have planetary to Planetay and then searching for them
                   collection.update({
                     type: "planetary",
                     $isolated: 1
@@ -94,7 +114,7 @@ MongoClient.connect("mongodb://localhost/", function(err, db) {
                         console.log("After Update: ");
                         console.log(itemArr);
 
-                        //Remvoing everything in the collection that has a type of plantary
+                        //Remvoing everything in the collection that has a type of plantary and then searching to proove they have been deleted
                         collection.remove({
                           type: "Planetary"
                         }, function(err, results) {
@@ -104,6 +124,8 @@ MongoClient.connect("mongodb://localhost/", function(err, db) {
                               console.log("After Delete: ");
                               console.log(itemArr);
                               console.log(" ");
+
+
                               //Dropping the collection within the database called collection and outputting the answer
                               newDB.dropCollection("colleciton", function(err, results) {
                                 console.log(" ");
@@ -111,6 +133,8 @@ MongoClient.connect("mongodb://localhost/", function(err, db) {
                                   console.log("Collections after deletion: ");
                                   console.log(collectionNames);
                                   console.log(" ");
+
+
                                   //Setting a timer to delete the database - giving it enough time to do everything before deleting.
                                   setTimeout(function() {
                                     db.db("newDB").dropDatabase(function(err, results) {
