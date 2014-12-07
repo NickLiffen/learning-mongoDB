@@ -1,0 +1,23 @@
+{
+  "name": "mongodb",
+  "version": "1.0.0",
+  "description": "Practise MongoDB",
+  "main": "index.js",
+  "dependencies": {
+    "mongodb": "^1.4.23",
+    "mongoose": "^3.8.20"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "runThisTest"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/NickLiffen"
+  },
+  "keywords": [
+    "mongodb"
+  ],
+  "author": "Nick Liffen",
+  "license": "ISC"
+}
